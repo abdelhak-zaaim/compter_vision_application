@@ -64,10 +64,41 @@ public class home {
                }
            }
         });
+        enregistrerButton.addActionListener(new ActionListener() {
+            /**
+             * @param e the event to be processed
+             */
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser fileChooser = new JFileChooser();
+                int result = fileChooser.showSaveDialog(null);
+                if (result == JFileChooser.APPROVE_OPTION) {
+                    File selectedFile = fileChooser.getSelectedFile();
+                    OptionsService optionsService = new OptionsService();
+                    optionsService.saveImage(selectedFile, fImage);
+                }
+
+            }
+        });
+        quitterButton.addActionListener(new ActionListener() {
+            /**
+             * @param e the event to be processed
+             */
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // show an confermation dialog
+                int result = JOptionPane.showConfirmDialog(null, "Voulez-vous vraiment quitter l'application?", "Quitter", JOptionPane.YES_NO_OPTION);
+                if (result == JOptionPane.YES_OPTION) {
+                    OptionsService optionsService = new OptionsService();
+                    optionsService.quitTheApplication();
+                }
+
+            }
+        });
     }
 
     public static void main(String[] args) {
-        JFrame frame = new JFrame("home");
+        JFrame frame = new JFrame("CV Application");
 
         home homePanel = new home();
         JPanel panel = new JPanel(new BorderLayout());
