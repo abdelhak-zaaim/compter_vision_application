@@ -54,36 +54,15 @@ public class home {
 
         ouvrirButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                JFileChooser fileChooser = new JFileChooser();
-                int result = fileChooser.showOpenDialog(null);
-                if (result == JFileChooser.APPROVE_OPTION) {
-                    File selectedFile = fileChooser.getSelectedFile();
-                    try {
-                        oImage = ImageIO.read(selectedFile);
-
-                        int width = originalmage.getWidth();
-                        int height = (int) (oImage.getHeight() * ((double) width / oImage.getWidth()));
-                        if (height > originalmage.getHeight()) {
-                            height = originalmage.getHeight();
-                            width = (int) (oImage.getWidth() * ((double) height / oImage.getHeight()));
-                        }
-                        Image scaledImage = oImage.getScaledInstance(width, height, Image.SCALE_SMOOTH);
-                        JLabel imageLabel = new JLabel(new ImageIcon(scaledImage));
-                        originalmage.removeAll();
-                        // make the image completely shown
-                        imageLabel.setHorizontalAlignment(JLabel.CENTER);
-                        imageLabel.setVerticalAlignment(JLabel.CENTER);
-
-                        originalmage.add(imageLabel, BorderLayout.CENTER);
-
-                        originalmage.revalidate();
-                        originalmage.repaint();
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
-                }
-            }
+           public void actionPerformed(ActionEvent e) {
+               JFileChooser fileChooser = new JFileChooser();
+               int result = fileChooser.showOpenDialog(null);
+               if (result == JFileChooser.APPROVE_OPTION) {
+                   File selectedFile = fileChooser.getSelectedFile();
+                   OptionsService optionsService = new OptionsService();
+                   optionsService.loadImage(selectedFile, originalmage);
+               }
+           }
         });
     }
 
