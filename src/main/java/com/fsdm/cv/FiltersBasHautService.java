@@ -120,9 +120,9 @@ public class FiltersBasHautService {
             BufferedImage filteredImage = new BufferedImage(width, height, image.getType());
 
             int[][] gradientKernel = {
-                    {1, 1, 1},
-                    {1, -7, 1},
-                    {1, 1, 1}
+                    {-1, -1, -1},
+                    {-1, 8, -1},
+                    {-1, -1, -1}
             };
 
             for (int y = 1; y < height - 1; y++) {
@@ -157,7 +157,6 @@ public class FiltersBasHautService {
             return null;
         }
     }
-
     public static File prewittFilter(File imageFile) {
         try {
             BufferedImage image = ImageIO.read(imageFile);
