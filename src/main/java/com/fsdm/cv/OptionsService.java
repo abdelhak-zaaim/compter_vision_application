@@ -33,4 +33,16 @@ public class OptionsService {
             ex.printStackTrace();
         }
     }
+
+    public void saveImage(File selectedFile, BufferedImage fImage) {
+        try {
+            ImageIO.write(fImage, "png", selectedFile);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public  void quitTheApplication() {
+        System.exit(0);
+    }
 }
