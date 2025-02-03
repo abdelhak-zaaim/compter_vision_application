@@ -354,6 +354,54 @@ public class home {
 
             }
         });
+        FPBButton.addActionListener(new ActionListener() {
+            /**
+             * @param e the event to be processed
+             */
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                fImage = FilterFrequentielleService.FPBFilter(oImage);
+                OptionsService optionsService = new OptionsService();
+                optionsService.showFiltredImage(fImage, filtredImage);
+
+            }
+        });
+        FPBBButton.addActionListener(new ActionListener() {
+            /**
+             * @param e the event to be processed
+             */
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                fImage = FilterFrequentielleService.FPBBFilter(oImage);
+                OptionsService optionsService = new OptionsService();
+                optionsService.showFiltredImage(fImage, filtredImage);
+
+            }
+        });
+        FPHButton.addActionListener(new ActionListener() {
+            /**
+             * @param e the event to be processed
+             */
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                fImage = FilterFrequentielleService.FPHFilter(oImage);
+                OptionsService optionsService = new OptionsService();
+                optionsService.showFiltredImage(fImage, filtredImage);
+
+            }
+        });
+        FPHBButton.addActionListener(new ActionListener() {
+            /**
+             * @param e the event to be processed
+             */
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                fImage = FilterFrequentielleService.FPHBFilter(oImage);
+                OptionsService optionsService = new OptionsService();
+                optionsService.showFiltredImage(fImage, filtredImage);
+
+            }
+        });
     }
 
     public static void main(String[] args) {
