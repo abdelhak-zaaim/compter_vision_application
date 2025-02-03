@@ -34,29 +34,35 @@ public class OptionsService {
         }
     }
 
-    public void showFiltredImage(BufferedImage fImage, JPanel filtredImage) {
-        int width = filtredImage.getWidth();
-        int height = (int) (fImage.getHeight() * ((double) width / fImage.getWidth()));
-        if (height > filtredImage.getHeight()) {
-            height = filtredImage.getHeight();
-            width = (int) (fImage.getWidth() * ((double) height / fImage.getHeight()));
+    public void showFiltredImage(File fImage, JPanel filtredImage) {
+        try {
+            BufferedImage fImageBuffered = ImageIO.read(fImage);
+
+            int width = filtredImage.getWidth();
+            int height = (int) (fImageBuffered.getHeight() * ((double) width / fImageBuffered.getWidth()));
+            if (height > filtredImage.getHeight()) {
+                height = filtredImage.getHeight();
+                width = (int) (fImageBuffered.getWidth() * ((double) height / fImageBuffered.getHeight()));
+            }
+            Image scaledImage = fImageBuffered.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+            JLabel imageLabel = new JLabel(new ImageIcon(scaledImage));
+            filtredImage.removeAll();
+            // make the image completely shown
+            imageLabel.setHorizontalAlignment(JLabel.CENTER);
+            imageLabel.setVerticalAlignment(JLabel.CENTER);
+
+            filtredImage.add(imageLabel, BorderLayout.CENTER);
+
+            filtredImage.revalidate();
+            filtredImage.repaint();
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
-        Image scaledImage = fImage.getScaledInstance(width, height, Image.SCALE_SMOOTH);
-        JLabel imageLabel = new JLabel(new ImageIcon(scaledImage));
-        filtredImage.removeAll();
-        // make the image completely shown
-        imageLabel.setHorizontalAlignment(JLabel.CENTER);
-        imageLabel.setVerticalAlignment(JLabel.CENTER);
-
-        filtredImage.add(imageLabel, BorderLayout.CENTER);
-
-        filtredImage.revalidate();
-        filtredImage.repaint();
     }
 
-    public void saveImage(File selectedFile, BufferedImage fImage) {
+    public void saveImage(File selectedFile, File fImage) {
         try {
-            ImageIO.write(fImage, "png", selectedFile);
+            ImageIO.write(ImageIO.read(fImage), "png", selectedFile);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
