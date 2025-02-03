@@ -34,6 +34,26 @@ public class OptionsService {
         }
     }
 
+    public void showFiltredImage(BufferedImage fImage, JPanel filtredImage) {
+        int width = filtredImage.getWidth();
+        int height = (int) (fImage.getHeight() * ((double) width / fImage.getWidth()));
+        if (height > filtredImage.getHeight()) {
+            height = filtredImage.getHeight();
+            width = (int) (fImage.getWidth() * ((double) height / fImage.getHeight()));
+        }
+        Image scaledImage = fImage.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        JLabel imageLabel = new JLabel(new ImageIcon(scaledImage));
+        filtredImage.removeAll();
+        // make the image completely shown
+        imageLabel.setHorizontalAlignment(JLabel.CENTER);
+        imageLabel.setVerticalAlignment(JLabel.CENTER);
+
+        filtredImage.add(imageLabel, BorderLayout.CENTER);
+
+        filtredImage.revalidate();
+        filtredImage.repaint();
+    }
+
     public void saveImage(File selectedFile, BufferedImage fImage) {
         try {
             ImageIO.write(fImage, "png", selectedFile);
