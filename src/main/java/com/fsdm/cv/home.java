@@ -45,12 +45,13 @@ public class home {
     private JPanel filtredImage;
 
 
-    BufferedImage oImage;
-    BufferedImage fImage;
+    File oImage;
+    File fImage;
 
     public home() {
         // Initialize the originalmage JPanel with a image vieewer
         originalmage.setLayout(new BorderLayout());
+        filtredImage.setLayout(new BorderLayout());
 
         ouvrirButton.addActionListener(new ActionListener() {
             @Override
@@ -59,8 +60,10 @@ public class home {
                int result = fileChooser.showOpenDialog(null);
                if (result == JFileChooser.APPROVE_OPTION) {
                    File selectedFile = fileChooser.getSelectedFile();
+                     oImage = selectedFile;
                    OptionsService optionsService = new OptionsService();
                    optionsService.loadImage(selectedFile, originalmage);
+
                }
            }
         });
@@ -92,6 +95,91 @@ public class home {
                     OptionsService optionsService = new OptionsService();
                     optionsService.quitTheApplication();
                 }
+
+            }
+        });
+        moyenneur33Button.addActionListener(new ActionListener() {
+            /**
+             * @param e the event to be processed
+             */
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                FiltersBasBasService filtersBasBasService = new FiltersBasBasService();
+                fImage = filtersBasBasService.Moyenneur33Filter(oImage);
+                OptionsService optionsService = new OptionsService();
+                optionsService.showFiltredImage(fImage, filtredImage);
+
+            }
+        });
+        moyenneur55Button.addActionListener(new ActionListener() {
+            /**
+             * @param e the event to be processed
+             */
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                fImage = FiltersBasBasService.moyenneur55(oImage);
+                OptionsService optionsService = new OptionsService();
+                optionsService.showFiltredImage(fImage, filtredImage);
+
+            }
+        });
+        coniqueButton.addActionListener(new ActionListener() {
+            /**
+             * @param e the event to be processed
+             */
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                fImage = FiltersBasBasService.coniqueFilter(oImage);
+                OptionsService optionsService = new OptionsService();
+                optionsService.showFiltredImage(fImage, filtredImage);
+
+            }
+        });
+        gaussienne33Button.addActionListener(new ActionListener() {
+            /**
+             * @param e the event to be processed
+             */
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                fImage = FiltersBasBasService.gaussienne33Filter(oImage);
+                OptionsService optionsService = new OptionsService();
+                optionsService.showFiltredImage(fImage, filtredImage);
+
+            }
+        });
+        gaussienne55Button.addActionListener(new ActionListener() {
+            /**
+             * @param e the event to be processed
+             */
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                fImage = FiltersBasBasService.gaussienne55Filter(oImage);
+                OptionsService optionsService = new OptionsService();
+                optionsService.showFiltredImage(fImage, filtredImage);
+
+            }
+        });
+        pyramidalButton.addActionListener(new ActionListener() {
+            /**
+             * @param e the event to be processed
+             */
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                fImage = FiltersBasBasService.pyramidalFilter(oImage);
+                OptionsService optionsService = new OptionsService();
+                optionsService.showFiltredImage(fImage, filtredImage);
+
+            }
+        });
+        medianButton.addActionListener(new ActionListener() {
+            /**
+             * @param e the event to be processed
+             */
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                fImage = FiltersBasBasService.medianFilter(oImage);
+                OptionsService optionsService = new OptionsService();
+                optionsService.showFiltredImage(fImage, filtredImage);
 
             }
         });
