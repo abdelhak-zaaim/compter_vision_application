@@ -423,7 +423,9 @@
                         <preferred-size width="40" height="-1"/>
                       </grid>
                     </constraints>
-                    <properties/>
+                    <properties>
+                      <text value="0"/>
+                    </properties>
                   </component>
                   <component id="35fc6" class="javax.swing.JLabel">
                     <constraints>
@@ -439,7 +441,10 @@
                         <preferred-size width="40" height="-1"/>
                       </grid>
                     </constraints>
-                    <properties/>
+                    <properties>
+                      <text value="0"/>
+                      <verifyInputWhenFocusTarget value="false"/>
+                    </properties>
                   </component>
                   <component id="aefb3" class="javax.swing.JLabel">
                     <constraints>

@@ -183,6 +183,177 @@ public class home {
 
             }
         });
+        laplacienButton.addActionListener(new ActionListener() {
+            /**
+             * @param e the event to be processed
+             */
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                fImage = FiltersBasHautService.laplacienFilter(oImage);
+                OptionsService optionsService = new OptionsService();
+                optionsService.showFiltredImage(fImage, filtredImage);
+
+            }
+        });
+        sobelButton.addActionListener(new ActionListener() {
+            /**
+             * @param e the event to be processed
+             */
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                fImage = FiltersBasHautService.sobelFilter(oImage);
+                OptionsService optionsService = new OptionsService();
+                optionsService.showFiltredImage(fImage, filtredImage);
+
+            }
+        });
+        gradientButton.addActionListener(new ActionListener() {
+            /**
+             * @param e the event to be processed
+             */
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                fImage = FiltersBasHautService.gradientFilter(oImage);
+                OptionsService optionsService = new OptionsService();
+                optionsService.showFiltredImage(fImage, filtredImage);
+
+            }
+        });
+        prewittButton.addActionListener(new ActionListener() {
+            /**
+             * @param e the event to be processed
+             */
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                fImage = FiltersBasHautService.prewittFilter(oImage);
+                OptionsService optionsService = new OptionsService();
+                optionsService.showFiltredImage(fImage, filtredImage);
+
+            }
+        });
+        robertButton.addActionListener(new ActionListener() {
+            /**
+             * @param e the event to be processed
+             */
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                fImage = FiltersBasHautService.robertFilter(oImage);
+                OptionsService optionsService = new OptionsService();
+                optionsService.showFiltredImage(fImage, filtredImage);
+
+            }
+        });
+        inversionButton.addActionListener(new ActionListener() {
+            /**
+             * @param e the event to be processed
+             */
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                fImage = TransformationService.inversion(oImage);
+                OptionsService optionsService = new OptionsService();
+                optionsService.showFiltredImage(fImage, filtredImage);
+
+            }
+        });
+        binarisationButton.addActionListener(new ActionListener() {
+            /**
+             * @param e the event to be processed
+             */
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int suile = Integer.parseInt(suileTextField.getText());
+                fImage = TransformationService.binarisation(oImage, suile);
+                OptionsService optionsService = new OptionsService();
+                optionsService.showFiltredImage(fImage, filtredImage);
+
+            }
+        });
+        contrasteButton.addActionListener(new ActionListener() {
+            /**
+             * @param e the event to be processed
+             */
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int contraste = Integer.parseInt(contrasteTextField.getText());
+                fImage = TransformationService.contraste(oImage, contraste);
+                OptionsService optionsService = new OptionsService();
+                optionsService.showFiltredImage(fImage, filtredImage);
+
+            }
+        });
+        divisionButton.addActionListener(new ActionListener() {
+            /**
+             * @param e the event to be processed
+             */
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                fImage = TransformationService.division(oImage, 2);
+
+            }
+        });
+        contrasteButton.addActionListener(new ActionListener() {
+            /**
+             * @param e the event to be processed
+             */
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int contraste = Integer.parseInt(contrasteTextField.getText());
+                fImage = TransformationService.contraste(oImage, contraste);
+                OptionsService optionsService = new OptionsService();
+                optionsService.showFiltredImage(fImage, filtredImage);
+
+            }
+        });
+        divisionButton.addActionListener(new ActionListener() {
+            /**
+             * @param e the event to be processed
+             */
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                fImage = TransformationService.division(oImage, 2);
+                OptionsService optionsService = new OptionsService();
+                optionsService.showFiltredImage(fImage, filtredImage);
+
+            }
+        });
+        niveauDeGrisButton.addActionListener(new ActionListener() {
+            /**
+             * @param e the event to be processed
+             */
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                fImage = TransformationService.niveauDeGris(oImage);
+                OptionsService optionsService = new OptionsService();
+                optionsService.showFiltredImage(fImage, filtredImage);
+
+            }
+        });
+        histogramButton.addActionListener(new ActionListener() {
+            /**
+             * @param e the event to be processed
+             */
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                fImage = TransformationService.histogram(oImage);
+                OptionsService optionsService = new OptionsService();
+                optionsService.showFiltredImage(fImage, filtredImage);
+
+            }
+        });
+        contrast_amilorationButton.addActionListener(new ActionListener() {
+            /**
+             * @param e the event to be processed
+             */
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int p = Integer.parseInt(pContrast.getText());
+                int b = Integer.parseInt(bContrast.getText());
+                fImage = TransformationService.contrastAmiloration(oImage, p, b);
+                OptionsService optionsService = new OptionsService();
+                optionsService.showFiltredImage(fImage, filtredImage);
+
+            }
+        });
     }
 
     public static void main(String[] args) {
@@ -200,5 +371,94 @@ public class home {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
+    }
+
+    public static File niveauDeGris(File image){
+        try {
+            BufferedImage imageBuffered = ImageIO.read(image);
+            int width = imageBuffered.getWidth();
+            int height = imageBuffered.getHeight();
+            BufferedImage grayImage = new BufferedImage(width, height, imageBuffered.getType());
+            for (int y = 0; y < height; y++) {
+                for (int x = 0; x < width; x++) {
+                    int rgb = imageBuffered.getRGB(x, y);
+                    int red = (rgb >> 16) & 0xFF;
+                    int green = (rgb >> 8) & 0xFF;
+                    int blue = rgb & 0xFF;
+                    int gray = (red + green + blue) / 3;
+                    int grayRgb = (gray << 16) | (gray << 8) | gray;
+                    grayImage.setRGB(x, y, grayRgb);
+                }
+            }
+            File outputFile = new File("gray_image.png");
+            ImageIO.write(grayImage, "png", outputFile);
+            return outputFile;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static File histogram(File image){
+        try {
+            BufferedImage imageBuffered = ImageIO.read(image);
+            int width = imageBuffered.getWidth();
+            int height = imageBuffered.getHeight();
+            int[] histogram = new int[256];
+            for (int y = 0; y < height; y++) {
+                for (int x = 0; x < width; x++) {
+                    int rgb = imageBuffered.getRGB(x, y);
+                    int red = (rgb >> 16) & 0xFF;
+                    int green = (rgb >> 8) & 0xFF;
+                    int blue = rgb & 0xFF;
+                    int gray = (red + green + blue) / 3;
+                    histogram[gray]++;
+                }
+            }
+            int max = 0;
+            for (int i = 0; i < histogram.length; i++) {
+                if (histogram[i] > max) {
+                    max = histogram[i];
+                }
+            }
+            BufferedImage histogramImage = new BufferedImage(256, max, BufferedImage.TYPE_INT_ARGB);
+            for (int x = 0; x < 256; x++) {
+                for (int y = 0; y < histogram[x]; y++) {
+                    histogramImage.setRGB(x, y, 0xFF000000);
+                }
+            }
+            File outputFile = new File("histogram_image.png");
+            ImageIO.write(histogramImage, "png", outputFile);
+            return outputFile;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static File contrastAmiloration(File image , int p, int b){
+        try {
+            BufferedImage imageBuffered = ImageIO.read(image);
+            int width = imageBuffered.getWidth();
+            int height = imageBuffered.getHeight();
+            BufferedImage contrastImage = new BufferedImage(width, height, imageBuffered.getType());
+            for (int y = 0; y < height; y++) {
+                for (int x = 0; x < width; x++) {
+                    int rgb = imageBuffered.getRGB(x, y);
+                    int red = (rgb >> 16) & 0xFF;
+                    int green = (rgb >> 8) & 0xFF;
+                    int blue = rgb & 0xFF;
+                    int gray = (red + green + blue) / 3;
+                    int contrastRgb = (int) (p * gray + b);
+                    contrastImage.setRGB(x, y, contrastRgb);
+                }
+            }
+            File outputFile = new File("contrast_image.png");
+            ImageIO.write(contrastImage, "png", outputFile);
+            return outputFile;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }
