@@ -43,6 +43,7 @@ public class home {
     private JButton FPHBButton;
     private JPanel originalmage;
     private JPanel filtredImage;
+    private JPanel immagesList;
 
 
     File oImage;
@@ -52,6 +53,7 @@ public class home {
         // Initialize the originalmage JPanel with a image vieewer
         originalmage.setLayout(new BorderLayout());
         filtredImage.setLayout(new BorderLayout());
+
 
         ouvrirButton.addActionListener(new ActionListener() {
             @Override
