@@ -35,7 +35,7 @@ public class TransformationService {
         }
     }
 
-    public static File binarisation(File image, int suile){
+    public static File binarisation(File image, int suile) {
         try {
             BufferedImage imageBuffered = ImageIO.read(image);
             int width = imageBuffered.getWidth();
@@ -61,7 +61,7 @@ public class TransformationService {
         }
     }
 
-    public static File contraste(File image, int contraste){
+    public static File contraste(File image, int contraste) {
         try {
             BufferedImage imageBuffered = ImageIO.read(image);
             int width = imageBuffered.getWidth();
@@ -89,7 +89,7 @@ public class TransformationService {
         }
     }
 
-    public static File division(File image, int division){
+    public static File division(File image, int division) {
         try {
             BufferedImage imageBuffered = ImageIO.read(image);
             int width = imageBuffered.getWidth();
@@ -117,7 +117,7 @@ public class TransformationService {
         }
     }
 
-    public static File niveauDeGris(File image){
+    public static File niveauDeGris(File image) {
         try {
             BufferedImage imageBuffered = ImageIO.read(image);
             int width = imageBuffered.getWidth();
@@ -190,53 +190,69 @@ public class TransformationService {
         }
     }
 
-    public static File contrastAmiloration(File oImage, int p, int b) {
+    public static File enhanceContrast(File inputFile) {
         try {
-            BufferedImage image = ImageIO.read(oImage);
-            int width = image.getWidth();
-            int height = image.getHeight();
-            BufferedImage contrastAmilorationImage = new BufferedImage(width, height, image.getType());
+            BufferedImage img = ImageIO.read(inputFile);
+            int width = img.getWidth();
+            int height = img.getHeight();
 
+            // Convert image to double array
+            double[][][] imgArray = new double[height][width][3];
             for (int y = 0; y < height; y++) {
                 for (int x = 0; x < width; x++) {
-                    int rgb = image.getRGB(x, y);
-                    int red = (rgb >> 16) & 0xFF;
-                    int green = (rgb >> 8) & 0xFF;
-                    int blue = rgb & 0xFF;
-
-                    int newRed = p * red + b;
-                    int newGreen = p * green + b;
-                    int newBlue = p * blue + b;
-
-                    if (newRed > 255) {
-                        newRed = 255;
-                    } else if (newRed < 0) {
-                        newRed = 0;
-                    }
-
-                    if (newGreen > 255) {
-                        newGreen = 255;
-                    } else if (newGreen < 0) {
-                        newGreen = 0;
-                    }
-
-                    if (newBlue > 255) {
-                        newBlue = 255;
-                    } else if (newBlue < 0) {
-                        newBlue = 0;
-                    }
-
-                    int contrastAmilorationRgb = (newRed << 16) | (newGreen << 8) | newBlue;
-                    contrastAmilorationImage.setRGB(x, y, contrastAmilorationRgb);
+                    int rgb = img.getRGB(x, y);
+                    imgArray[y][x][0] = (rgb >> 16) & 0xFF;
+                    imgArray[y][x][1] = (rgb >> 8) & 0xFF;
+                    imgArray[y][x][2] = rgb & 0xFF;
                 }
             }
 
-            File outputFile = new File("contrast_amiloration_image.png");
-            ImageIO.write(contrastAmilorationImage, "png", outputFile);
+            // Compute min and max pixel values in the image
+            double min = Double.MAX_VALUE;
+            double max = Double.MIN_VALUE;
+            for (int y = 0; y < height; y++) {
+                for (int x = 0; x < width; x++) {
+                    for (int c = 0; c < 3; c++) {
+                        min = Math.min(min, imgArray[y][x][c]);
+                        max = Math.max(max, imgArray[y][x][c]);
+                    }
+                }
+            }
+
+            // Compute P and B
+            double P = 255.0 / (max - min);
+            double B = -P * min;
+
+            // Apply contrast enhancement
+            for (int y = 0; y < height; y++) {
+                for (int x = 0; x < width; x++) {
+                    for (int c = 0; c < 3; c++) {
+                        imgArray[y][x][c] = P * imgArray[y][x][c] + B;
+                        imgArray[y][x][c] = Math.max(0, Math.min(255, imgArray[y][x][c]));
+                    }
+                }
+            }
+
+            // Convert double array back to BufferedImage
+            BufferedImage enhancedImg = new BufferedImage(width, height, img.getType());
+            for (int y = 0; y < height; y++) {
+                for (int x = 0; x < width; x++) {
+                    int red = (int) imgArray[y][x][0];
+                    int green = (int) imgArray[y][x][1];
+                    int blue = (int) imgArray[y][x][2];
+                    int rgb = (red << 16) | (green << 8) | blue;
+                    enhancedImg.setRGB(x, y, rgb);
+                }
+            }
+
+            // Save the enhanced image
+            File outputFile = new File("output.png");
+            ImageIO.write(enhancedImg, "png", outputFile);
             return outputFile;
         } catch (IOException e) {
             e.printStackTrace();
-            return null;
         }
+        return null;
     }
+
 }
