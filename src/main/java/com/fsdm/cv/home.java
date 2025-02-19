@@ -77,17 +77,11 @@ public class home {
     private JButton poivreAndSelNoise;
     private JProgressBar progressBar;
     private JPanel curnersJpanel;
-    private JButton susanButton;
-    private JSpinner suileSusan;
-    private JPanel divThreachholder;
-    private JButton harrisButton;
-    private JSpinner harrisThreshold;
-    private JPanel harrisDiv;
-    private JPanel electrostacticalDiv;
-    private JSpinner thresholdElectrostatical;
-    private JButton modelElectrostatic;
     private JPanel headerSeparator;
-    private JButton button1;
+    private JButton érosionButton;
+    private JButton dilatationButton;
+    private JButton ouvertureButton;
+    private JButton fermetureButton;
 
     File oImage;
     File fImage;
@@ -134,8 +128,7 @@ public class home {
 
         executorService = Executors.newVirtualThreadPerTaskExecutor();
 
-        harrisThreshold.setValue(40);
-        thresholdElectrostatical.setValue(200);
+
 
         // Example filter button action listener
         moyenneur33Button.addActionListener(new ActionListener() {
@@ -232,20 +225,11 @@ public class home {
         div6.setOpaque(false);
         div6.setBackground(new Color(0, 0, 0, 0));
 
-        divThreachholder.setOpaque(false);
-        divThreachholder.setBackground(new Color(0, 0, 0, 0));
-
         div7.setOpaque(false);
         div7.setBackground(new Color(0, 0, 0, 0));
 
-        harrisDiv.setOpaque(false);
-        harrisDiv.setBackground(new Color(0, 0, 0, 0));
-
         actionsJpanel.setOpaque(false);
         actionsJpanel.setBackground(new Color(0, 0, 0, 0));
-
-        electrostacticalDiv.setOpaque(false);
-        electrostacticalDiv.setBackground(new Color(0, 0, 0, 0));
 
         headerSeparator.setOpaque(false);
         headerSeparator.setBackground(new Color(0, 0, 0, 0));
@@ -835,7 +819,7 @@ public class home {
 
             }
         });
-        susanButton.addActionListener(new ActionListener() {
+        érosionButton.addActionListener(new ActionListener() {
             /**
              * @param e the event to be processed
              */
@@ -843,7 +827,7 @@ public class home {
             public void actionPerformed(ActionEvent e) {
                 startSpin();
                 executorService.submit(() -> {
-                    fImage = SusanCurnersDetections.SusanCornersDetection(oImage, 3);
+                    fImage = MorphologicalOperations.erosion(oImage);
                     OptionsService optionsService = new OptionsService();
                     optionsService.showFiltredImage(fImage, filtredImage);
                     stopSpin();
@@ -851,26 +835,15 @@ public class home {
 
             }
         });
-        susanButton.addActionListener(new ActionListener() {
+        dilatationButton.addActionListener(new ActionListener() {
             /**
              * @param e the event to be processed
              */
             @Override
             public void actionPerformed(ActionEvent e) {
-                double suileSusanValue;
-                var value = suileSusan.getValue();
-                if (value instanceof Integer) {
-                     suileSusanValue = ((Integer) value).doubleValue();
-                } else if (value instanceof Double) {
-                     suileSusanValue = (Double) value;
-                } else {
-                    suileSusanValue = 0;
-                }
-
-
                 startSpin();
                 executorService.submit(() -> {
-                    fImage = SusanCurnersDetections.SusanCornersDetection(oImage, suileSusanValue);
+                    fImage = MorphologicalOperations.dilation(oImage);
                     OptionsService optionsService = new OptionsService();
                     optionsService.showFiltredImage(fImage, filtredImage);
                     stopSpin();
@@ -878,26 +851,15 @@ public class home {
 
             }
         });
-        harrisButton.addActionListener(new ActionListener() {
+        ouvertureButton.addActionListener(new ActionListener() {
             /**
              * @param e the event to be processed
              */
             @Override
             public void actionPerformed(ActionEvent e) {
-                double harrisThresholdValue;
-                var value = harrisThreshold.getValue();
-                if (value instanceof Integer) {
-                    harrisThresholdValue = ((Integer) value).doubleValue();
-                } else if (value instanceof Double) {
-                    harrisThresholdValue = (Double) value;
-                } else {
-                    harrisThresholdValue = 0;
-                }
-
-
                 startSpin();
                 executorService.submit(() -> {
-                    fImage = HarrisCornerDetection.HarrisCornersDetection(oImage, 0.04, harrisThresholdValue);
+                    fImage = MorphologicalOperations.opening(oImage);
                     OptionsService optionsService = new OptionsService();
                     optionsService.showFiltredImage(fImage, filtredImage);
                     stopSpin();
@@ -905,24 +867,15 @@ public class home {
 
             }
         });
-        modelElectrostatic.addActionListener(new ActionListener() {
+        fermetureButton.addActionListener(new ActionListener() {
             /**
              * @param e the event to be processed
              */
             @Override
             public void actionPerformed(ActionEvent e) {
-                double thresholdElectrostaticalValue;
-                var value = thresholdElectrostatical.getValue();
-                if (value instanceof Integer) {
-                    thresholdElectrostaticalValue = ((Integer) value).doubleValue();
-                } else if (value instanceof Double) {
-                    thresholdElectrostaticalValue = (Double) value;
-                } else {
-                    thresholdElectrostaticalValue = 0;
-                }
                 startSpin();
                 executorService.submit(() -> {
-                    fImage = ElectrostaticModelCurnersDetection.ElectrostaticCornersDetection(oImage,  thresholdElectrostaticalValue);
+                    fImage = MorphologicalOperations.closing(oImage);
                     OptionsService optionsService = new OptionsService();
                     optionsService.showFiltredImage(fImage, filtredImage);
                     stopSpin();
