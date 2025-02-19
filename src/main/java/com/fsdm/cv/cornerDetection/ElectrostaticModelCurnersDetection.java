@@ -27,6 +27,7 @@ public class ElectrostaticModelCurnersDetection {
                 }
             }
 
+
             // Apply electrostatic model for corner detection
             double[][] result = performElectrostaticCornerDetection(grayscale, threshold);
 
@@ -38,8 +39,7 @@ public class ElectrostaticModelCurnersDetection {
                         resultImage.setRGB(x, y, Color.RED.getRGB());
                     } else {
                         int gray = (int) grayscale[y][x];
-                        int rgb = (gray << 16) | (gray << 8) | gray;
-                        resultImage.setRGB(x, y, rgb);
+                        resultImage.setRGB(x, y, img.getRGB(x, y));
                     }
                 }
             }
@@ -58,6 +58,7 @@ public class ElectrostaticModelCurnersDetection {
         int height = image.length;
         int width = image[0].length;
         double[][] result = new double[height][width];
+
 
         // Implement the electrostatic model for corner detection
         // This is a placeholder for the actual algorithm
