@@ -3,6 +3,10 @@ package com.fsdm.cv;
 import com.fsdm.cv.cornerDetection.ElectrostaticModelCurnersDetection;
 import com.fsdm.cv.cornerDetection.HarrisCornerDetection;
 import com.fsdm.cv.cornerDetection.SusanCurnersDetections;
+import com.fsdm.cv.frequential.FPB;
+import com.fsdm.cv.frequential.FPBB;
+import com.fsdm.cv.frequential.FPH;
+import com.fsdm.cv.frequential.FPHB;
 import com.fsdm.cv.ui.ArrowProgressBarUI;
 
 import javax.imageio.ImageIO;
@@ -731,7 +735,7 @@ public class home {
             public void actionPerformed(ActionEvent e) {
                 startSpin();
                 executorService.submit(() -> {
-                    fImage = FilterFrequentielleService.FPBFilter(oImage);
+                    fImage = FPB.applyButterworthLowPassFilter(oImage, 2, 2);
                     OptionsService optionsService = new OptionsService();
                     optionsService.showFiltredImage(fImage, filtredImage);
                     stopSpin();
@@ -747,7 +751,7 @@ public class home {
             public void actionPerformed(ActionEvent e) {
                 startSpin();
                 executorService.submit(() -> {
-                    fImage = FilterFrequentielleService.FPBBFilter(oImage);
+                    fImage = FPBB.applyButterworthHighPassFilter(oImage, 2, 2);
                     OptionsService optionsService = new OptionsService();
                     optionsService.showFiltredImage(fImage, filtredImage);
                     stopSpin();
@@ -763,7 +767,7 @@ public class home {
             public void actionPerformed(ActionEvent e) {
                 startSpin();
                 executorService.submit(() -> {
-                    fImage = FilterFrequentielleService.FPHFilter(oImage);
+                    fImage = FPH.applyHighPassFilter(oImage, 2, 2);
                     OptionsService optionsService = new OptionsService();
                     optionsService.showFiltredImage(fImage, filtredImage);
                     stopSpin();
@@ -779,7 +783,7 @@ public class home {
             public void actionPerformed(ActionEvent e) {
                 startSpin();
                 executorService.submit(() -> {
-                    fImage = FilterFrequentielleService.FPHBFilter(oImage);
+                    fImage = FPHB.applyButterworthHighPassFilter(oImage, 2, 2);
                     OptionsService optionsService = new OptionsService();
                     optionsService.showFiltredImage(fImage, filtredImage);
                     stopSpin();
