@@ -87,6 +87,7 @@ public class home {
     private JSpinner thresholdElectrostatical;
     private JButton modelElectrostatic;
     private JPanel headerSeparator;
+    private JButton button1;
 
     File oImage;
     File fImage;
