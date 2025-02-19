@@ -1,4 +1,4 @@
-package com.fsdm.cv;
+package com.fsdm.cv.cornerDetection;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -7,7 +7,7 @@ import javax.imageio.ImageIO;
 import java.awt.Color;
 import java.util.Arrays;
 
-public class CurnersDetections {
+public class SusanCurnersDetections {
     public static File SusanCornersDetection(File imageFile, double threshold) {
         try {
             BufferedImage img = ImageIO.read(imageFile);
@@ -42,7 +42,7 @@ public class CurnersDetections {
                     } else {
                         int gray = (int) grayscale[y][x];
                         int rgb = (gray << 16) | (gray << 8) | gray;
-                        resultImage.setRGB(x, y, rgb);
+                        resultImage.setRGB(x, y, img.getRGB(x, y));
                     }
                 }
             }
@@ -147,4 +147,8 @@ public class CurnersDetections {
         }
         return result;
     }
+
+
+
+
 }

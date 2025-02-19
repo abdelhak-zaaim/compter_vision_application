@@ -1,5 +1,8 @@
 package com.fsdm.cv;
 
+import com.fsdm.cv.cornerDetection.ElectrostaticModelCurnersDetection;
+import com.fsdm.cv.cornerDetection.HarrisCornerDetection;
+import com.fsdm.cv.cornerDetection.SusanCurnersDetections;
 import com.fsdm.cv.ui.ArrowProgressBarUI;
 
 import javax.imageio.ImageIO;
@@ -73,6 +76,13 @@ public class home {
     private JButton susanButton;
     private JSpinner suileSusan;
     private JPanel divThreachholder;
+    private JButton harrisButton;
+    private JSpinner harrisThreshold;
+    private JPanel harrisDiv;
+    private JPanel electrostacticalDiv;
+    private JSpinner thresholdElectrostatical;
+    private JButton modelElectrostatic;
+    private JPanel headerSeparator;
 
     File oImage;
     File fImage;
@@ -119,6 +129,9 @@ public class home {
 
         executorService = Executors.newVirtualThreadPerTaskExecutor();
 
+        harrisThreshold.setValue(40);
+        thresholdElectrostatical.setValue(200);
+
         // Example filter button action listener
         moyenneur33Button.addActionListener(new ActionListener() {
             @Override
@@ -155,9 +168,21 @@ public class home {
                             for (Object item : (java.util.List) data) {
                                 if (item instanceof File) {
                                     File file = (File) item;
-                                    oImage = file;
-                                    OptionsService optionsService = new OptionsService();
-                                    optionsService.loadImage(file, originalmage);
+
+                                    // check if image and convert it to RGB
+                                    try {
+                                        BufferedImage img = ImageIO.read(file);
+                                        BufferedImage rgbImage = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
+                                        rgbImage.createGraphics().drawImage(img, 0, 0, Color.WHITE, null);
+                                        File newFile = new File("temp.png");
+                                        ImageIO.write(rgbImage, "png", newFile);
+                                        oImage = newFile;
+                                        OptionsService optionsService = new OptionsService();
+                                        optionsService.loadImage(file, originalmage);
+                                    } catch (IOException ex) {
+                                        throw new RuntimeException(ex);
+
+                                    }
                                 }
                             }
                         }
@@ -208,8 +233,17 @@ public class home {
         div7.setOpaque(false);
         div7.setBackground(new Color(0, 0, 0, 0));
 
+        harrisDiv.setOpaque(false);
+        harrisDiv.setBackground(new Color(0, 0, 0, 0));
+
         actionsJpanel.setOpaque(false);
         actionsJpanel.setBackground(new Color(0, 0, 0, 0));
+
+        electrostacticalDiv.setOpaque(false);
+        electrostacticalDiv.setBackground(new Color(0, 0, 0, 0));
+
+        headerSeparator.setOpaque(false);
+        headerSeparator.setBackground(new Color(0, 0, 0, 0));
 
 
         // oopen button
@@ -255,9 +289,23 @@ public class home {
                 int result = fileChooser.showOpenDialog(null);
                 if (result == JFileChooser.APPROVE_OPTION) {
                     File selectedFile = fileChooser.getSelectedFile();
-                    oImage = selectedFile;
-                    OptionsService optionsService = new OptionsService();
-                    optionsService.loadImage(selectedFile, originalmage);
+
+                    // convert the selected image to RGB
+                    try {
+                        BufferedImage img = ImageIO.read(selectedFile);
+                        BufferedImage rgbImage = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
+                        rgbImage.createGraphics().drawImage(img, 0, 0, Color.WHITE, null);
+                        File newFile = new File("temp.png");
+                        ImageIO.write(rgbImage, "png", newFile);
+                        oImage = newFile;
+                        OptionsService optionsService = new OptionsService();
+                        optionsService.loadImage(selectedFile, originalmage);
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+
+                    }
+
+
                 }
             }
         });
@@ -337,10 +385,14 @@ public class home {
              */
             @Override
             public void actionPerformed(ActionEvent e) {
-                FiltersBasBasService filtersBasBasService = new FiltersBasBasService();
-                fImage = filtersBasBasService.Moyenneur33Filter(oImage);
-                OptionsService optionsService = new OptionsService();
-                optionsService.showFiltredImage(fImage, filtredImage);
+                startSpin();
+                executorService.submit(() -> {
+                    FiltersBasBasService filtersBasBasService = new FiltersBasBasService();
+                    fImage = filtersBasBasService.Moyenneur33Filter(oImage);
+                    OptionsService optionsService = new OptionsService();
+                    optionsService.showFiltredImage(fImage, filtredImage);
+                    stopSpin();
+                });
 
             }
         });
@@ -351,10 +403,13 @@ public class home {
             @Override
             public void actionPerformed(ActionEvent e) {
                 startSpin();
-                fImage = FiltersBasBasService.moyenneur55(oImage);
-                OptionsService optionsService = new OptionsService();
-                optionsService.showFiltredImage(fImage, filtredImage);
-                stopSpin();
+                executorService.submit(() -> {
+                    fImage = FiltersBasBasService.moyenneur55(oImage);
+                    OptionsService optionsService = new OptionsService();
+                    optionsService.showFiltredImage(fImage, filtredImage);
+                    optionsService.showFiltredImage(fImage, filtredImage);
+                    stopSpin();
+                });
 
             }
         });
@@ -364,9 +419,13 @@ public class home {
              */
             @Override
             public void actionPerformed(ActionEvent e) {
-                fImage = FiltersBasBasService.coniqueFilter(oImage);
-                OptionsService optionsService = new OptionsService();
-                optionsService.showFiltredImage(fImage, filtredImage);
+                startSpin();
+                executorService.submit(() -> {
+                    fImage = FiltersBasBasService.coniqueFilter(oImage);
+                    OptionsService optionsService = new OptionsService();
+                    optionsService.showFiltredImage(fImage, filtredImage);
+                    stopSpin();
+                });
 
             }
         });
@@ -376,9 +435,13 @@ public class home {
              */
             @Override
             public void actionPerformed(ActionEvent e) {
-                fImage = FiltersBasBasService.gaussienne33Filter(oImage);
-                OptionsService optionsService = new OptionsService();
-                optionsService.showFiltredImage(fImage, filtredImage);
+                startSpin();
+                executorService.submit(() -> {
+                    fImage = FiltersBasBasService.gaussienne33Filter(oImage);
+                    OptionsService optionsService = new OptionsService();
+                    optionsService.showFiltredImage(fImage, filtredImage);
+                    stopSpin();
+                });
 
             }
         });
@@ -388,9 +451,13 @@ public class home {
              */
             @Override
             public void actionPerformed(ActionEvent e) {
-                fImage = FiltersBasBasService.gaussienne55Filter(oImage);
-                OptionsService optionsService = new OptionsService();
-                optionsService.showFiltredImage(fImage, filtredImage);
+                startSpin();
+                executorService.submit(() -> {
+                    fImage = FiltersBasBasService.gaussienne55Filter(oImage);
+                    OptionsService optionsService = new OptionsService();
+                    optionsService.showFiltredImage(fImage, filtredImage);
+                    stopSpin();
+                });
 
             }
         });
@@ -400,9 +467,13 @@ public class home {
              */
             @Override
             public void actionPerformed(ActionEvent e) {
-                fImage = FiltersBasBasService.pyramidalFilter(oImage);
-                OptionsService optionsService = new OptionsService();
-                optionsService.showFiltredImage(fImage, filtredImage);
+                startSpin();
+                executorService.submit(() -> {
+                    fImage = FiltersBasBasService.pyramidalFilter(oImage);
+                    OptionsService optionsService = new OptionsService();
+                    optionsService.showFiltredImage(fImage, filtredImage);
+                    stopSpin();
+                });
 
             }
         });
@@ -412,9 +483,13 @@ public class home {
              */
             @Override
             public void actionPerformed(ActionEvent e) {
-                fImage = FiltersBasBasService.medianFilter(oImage);
-                OptionsService optionsService = new OptionsService();
-                optionsService.showFiltredImage(fImage, filtredImage);
+                startSpin();
+                executorService.submit(() -> {
+                    fImage = FiltersBasBasService.medianFilter(oImage);
+                    OptionsService optionsService = new OptionsService();
+                    optionsService.showFiltredImage(fImage, filtredImage);
+                    stopSpin();
+                });
 
             }
         });
@@ -424,9 +499,13 @@ public class home {
              */
             @Override
             public void actionPerformed(ActionEvent e) {
-                fImage = FiltersBasHautService.laplacienFilter(oImage);
-                OptionsService optionsService = new OptionsService();
-                optionsService.showFiltredImage(fImage, filtredImage);
+                startSpin();
+                executorService.submit(() -> {
+                    fImage = FiltersBasHautService.laplacienFilter(oImage);
+                    OptionsService optionsService = new OptionsService();
+                    optionsService.showFiltredImage(fImage, filtredImage);
+                    stopSpin();
+                });
 
             }
         });
@@ -436,9 +515,13 @@ public class home {
              */
             @Override
             public void actionPerformed(ActionEvent e) {
-                fImage = FiltersBasHautService.sobelFilter(oImage);
-                OptionsService optionsService = new OptionsService();
-                optionsService.showFiltredImage(fImage, filtredImage);
+                startSpin();
+                executorService.submit(() -> {
+                    fImage = FiltersBasHautService.sobelFilter(oImage);
+                    OptionsService optionsService = new OptionsService();
+                    optionsService.showFiltredImage(fImage, filtredImage);
+                    stopSpin();
+                });
 
             }
         });
@@ -448,9 +531,13 @@ public class home {
              */
             @Override
             public void actionPerformed(ActionEvent e) {
-                fImage = FiltersBasHautService.gradientFilter(oImage);
-                OptionsService optionsService = new OptionsService();
-                optionsService.showFiltredImage(fImage, filtredImage);
+                startSpin();
+                executorService.submit(() -> {
+                    fImage = FiltersBasHautService.gradientFilter(oImage);
+                    OptionsService optionsService = new OptionsService();
+                    optionsService.showFiltredImage(fImage, filtredImage);
+                    stopSpin();
+                });
 
             }
         });
@@ -460,9 +547,13 @@ public class home {
              */
             @Override
             public void actionPerformed(ActionEvent e) {
-                fImage = FiltersBasHautService.prewittFilter(oImage);
-                OptionsService optionsService = new OptionsService();
-                optionsService.showFiltredImage(fImage, filtredImage);
+                startSpin();
+                executorService.submit(() -> {
+                    fImage = FiltersBasHautService.prewittFilter(oImage);
+                    OptionsService optionsService = new OptionsService();
+                    optionsService.showFiltredImage(fImage, filtredImage);
+                    stopSpin();
+                });
 
             }
         });
@@ -472,9 +563,13 @@ public class home {
              */
             @Override
             public void actionPerformed(ActionEvent e) {
-                fImage = FiltersBasHautService.robertFilter(oImage);
-                OptionsService optionsService = new OptionsService();
-                optionsService.showFiltredImage(fImage, filtredImage);
+                startSpin();
+                executorService.submit(() -> {
+                    fImage = FiltersBasHautService.robertFilter(oImage);
+                    OptionsService optionsService = new OptionsService();
+                    optionsService.showFiltredImage(fImage, filtredImage);
+                    stopSpin();
+                });
 
             }
         });
@@ -484,9 +579,13 @@ public class home {
              */
             @Override
             public void actionPerformed(ActionEvent e) {
-                fImage = TransformationService.inversion(oImage);
-                OptionsService optionsService = new OptionsService();
-                optionsService.showFiltredImage(fImage, filtredImage);
+                startSpin();
+                executorService.submit(() -> {
+                    fImage = TransformationService.inversion(oImage);
+                    OptionsService optionsService = new OptionsService();
+                    optionsService.showFiltredImage(fImage, filtredImage);
+                    stopSpin();
+                });
 
             }
         });
@@ -497,9 +596,15 @@ public class home {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int suile = Integer.parseInt(suileTextField.getText());
-                fImage = TransformationService.binarisation(oImage, suile);
-                OptionsService optionsService = new OptionsService();
-                optionsService.showFiltredImage(fImage, filtredImage);
+
+                startSpin();
+                executorService.submit(() -> {
+                    fImage = TransformationService.binarisation(oImage, suile);
+                    OptionsService optionsService = new OptionsService();
+                    optionsService.showFiltredImage(fImage, filtredImage);
+                    stopSpin();
+                });
+
 
             }
         });
@@ -510,9 +615,13 @@ public class home {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int contraste = Integer.parseInt(contrasteTextField.getText());
-                fImage = TransformationService.contraste(oImage, contraste);
-                OptionsService optionsService = new OptionsService();
-                optionsService.showFiltredImage(fImage, filtredImage);
+                startSpin();
+                executorService.submit(() -> {
+                    fImage = TransformationService.contraste(oImage, contraste);
+                    OptionsService optionsService = new OptionsService();
+                    optionsService.showFiltredImage(fImage, filtredImage);
+                    stopSpin();
+                });
 
             }
         });
@@ -522,7 +631,13 @@ public class home {
              */
             @Override
             public void actionPerformed(ActionEvent e) {
-                fImage = TransformationService.division(oImage, 2);
+                startSpin();
+                executorService.submit(() -> {
+                    fImage = TransformationService.division(oImage, 2);
+                    OptionsService optionsService = new OptionsService();
+                    optionsService.showFiltredImage(fImage, filtredImage);
+                    stopSpin();
+                });
 
             }
         });
@@ -533,9 +648,13 @@ public class home {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int contraste = Integer.parseInt(contrasteTextField.getText());
-                fImage = TransformationService.contraste(oImage, contraste);
-                OptionsService optionsService = new OptionsService();
-                optionsService.showFiltredImage(fImage, filtredImage);
+                startSpin();
+                executorService.submit(() -> {
+                    fImage = TransformationService.contraste(oImage, contraste);
+                    OptionsService optionsService = new OptionsService();
+                    optionsService.showFiltredImage(fImage, filtredImage);
+                    stopSpin();
+                });
 
             }
         });
@@ -545,9 +664,13 @@ public class home {
              */
             @Override
             public void actionPerformed(ActionEvent e) {
-                fImage = TransformationService.division(oImage, 2);
-                OptionsService optionsService = new OptionsService();
-                optionsService.showFiltredImage(fImage, filtredImage);
+                startSpin();
+                executorService.submit(() -> {
+                    fImage = TransformationService.division(oImage, 2);
+                    OptionsService optionsService = new OptionsService();
+                    optionsService.showFiltredImage(fImage, filtredImage);
+                    stopSpin();
+                });
 
             }
         });
@@ -557,9 +680,13 @@ public class home {
              */
             @Override
             public void actionPerformed(ActionEvent e) {
-                fImage = TransformationService.niveauDeGris(oImage);
-                OptionsService optionsService = new OptionsService();
-                optionsService.showFiltredImage(fImage, filtredImage);
+                startSpin();
+                executorService.submit(() -> {
+                    fImage = TransformationService.niveauDeGris(oImage);
+                    OptionsService optionsService = new OptionsService();
+                    optionsService.showFiltredImage(fImage, filtredImage);
+                    stopSpin();
+                });
 
             }
         });
@@ -569,9 +696,13 @@ public class home {
              */
             @Override
             public void actionPerformed(ActionEvent e) {
-                fImage = TransformationService.histogram(oImage);
-                OptionsService optionsService = new OptionsService();
-                optionsService.showFiltredImage(fImage, filtredImage);
+                startSpin();
+                executorService.submit(() -> {
+                    fImage = TransformationService.histogram(oImage);
+                    OptionsService optionsService = new OptionsService();
+                    optionsService.showFiltredImage(fImage, filtredImage);
+                    stopSpin();
+                });
 
             }
         });
@@ -582,9 +713,13 @@ public class home {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                fImage = TransformationService.enhanceContrast(oImage);
-                OptionsService optionsService = new OptionsService();
-                optionsService.showFiltredImage(fImage, filtredImage);
+                startSpin();
+                executorService.submit(() -> {
+                    fImage = TransformationService.enhanceContrast(oImage);
+                    OptionsService optionsService = new OptionsService();
+                    optionsService.showFiltredImage(fImage, filtredImage);
+                    stopSpin();
+                });
 
             }
         });
@@ -594,9 +729,13 @@ public class home {
              */
             @Override
             public void actionPerformed(ActionEvent e) {
-                fImage = FilterFrequentielleService.FPBFilter(oImage);
-                OptionsService optionsService = new OptionsService();
-                optionsService.showFiltredImage(fImage, filtredImage);
+                startSpin();
+                executorService.submit(() -> {
+                    fImage = FilterFrequentielleService.FPBFilter(oImage);
+                    OptionsService optionsService = new OptionsService();
+                    optionsService.showFiltredImage(fImage, filtredImage);
+                    stopSpin();
+                });
 
             }
         });
@@ -606,9 +745,13 @@ public class home {
              */
             @Override
             public void actionPerformed(ActionEvent e) {
-                fImage = FilterFrequentielleService.FPBBFilter(oImage);
-                OptionsService optionsService = new OptionsService();
-                optionsService.showFiltredImage(fImage, filtredImage);
+                startSpin();
+                executorService.submit(() -> {
+                    fImage = FilterFrequentielleService.FPBBFilter(oImage);
+                    OptionsService optionsService = new OptionsService();
+                    optionsService.showFiltredImage(fImage, filtredImage);
+                    stopSpin();
+                });
 
             }
         });
@@ -618,9 +761,13 @@ public class home {
              */
             @Override
             public void actionPerformed(ActionEvent e) {
-                fImage = FilterFrequentielleService.FPHFilter(oImage);
-                OptionsService optionsService = new OptionsService();
-                optionsService.showFiltredImage(fImage, filtredImage);
+                startSpin();
+                executorService.submit(() -> {
+                    fImage = FilterFrequentielleService.FPHFilter(oImage);
+                    OptionsService optionsService = new OptionsService();
+                    optionsService.showFiltredImage(fImage, filtredImage);
+                    stopSpin();
+                });
 
             }
         });
@@ -630,9 +777,13 @@ public class home {
              */
             @Override
             public void actionPerformed(ActionEvent e) {
-                fImage = FilterFrequentielleService.FPHBFilter(oImage);
-                OptionsService optionsService = new OptionsService();
-                optionsService.showFiltredImage(fImage, filtredImage);
+                startSpin();
+                executorService.submit(() -> {
+                    fImage = FilterFrequentielleService.FPHBFilter(oImage);
+                    OptionsService optionsService = new OptionsService();
+                    optionsService.showFiltredImage(fImage, filtredImage);
+                    stopSpin();
+                });
 
             }
         });
@@ -644,13 +795,18 @@ public class home {
             public void actionPerformed(ActionEvent e) {
                 double mean = 0;
                 double variance = 0.1;
-                try {
-                    fImage = Noise.gaussianNoise(oImage, mean, variance);
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
-                OptionsService optionsService = new OptionsService();
-                optionsService.showFiltredImage(fImage, originalmage);
+
+                startSpin();
+                executorService.submit(() -> {
+                    try {
+                        fImage = Noise.gaussianNoise(oImage, mean, variance);
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    OptionsService optionsService = new OptionsService();
+                    optionsService.showFiltredImage(fImage, filtredImage);
+                    stopSpin();
+                });
 
             }
         });
@@ -660,13 +816,17 @@ public class home {
              */
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
-                    fImage = Noise.poivreAndSelNoise(oImage);
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
-                OptionsService optionsService = new OptionsService();
-                optionsService.showFiltredImage(fImage, originalmage);
+                startSpin();
+                executorService.submit(() -> {
+                    try {
+                        fImage = Noise.poivreAndSelNoise(oImage);
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    OptionsService optionsService = new OptionsService();
+                    optionsService.showFiltredImage(fImage, filtredImage);
+                    stopSpin();
+                });
 
             }
         });
@@ -678,7 +838,7 @@ public class home {
             public void actionPerformed(ActionEvent e) {
                 startSpin();
                 executorService.submit(() -> {
-                    fImage = CurnersDetections.SusanCornersDetection(oImage, 3);
+                    fImage = SusanCurnersDetections.SusanCornersDetection(oImage, 3);
                     OptionsService optionsService = new OptionsService();
                     optionsService.showFiltredImage(fImage, filtredImage);
                     stopSpin();
@@ -705,7 +865,59 @@ public class home {
 
                 startSpin();
                 executorService.submit(() -> {
-                    fImage = CurnersDetections.SusanCornersDetection(oImage, suileSusanValue);
+                    fImage = SusanCurnersDetections.SusanCornersDetection(oImage, suileSusanValue);
+                    OptionsService optionsService = new OptionsService();
+                    optionsService.showFiltredImage(fImage, filtredImage);
+                    stopSpin();
+                });
+
+            }
+        });
+        harrisButton.addActionListener(new ActionListener() {
+            /**
+             * @param e the event to be processed
+             */
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                double harrisThresholdValue;
+                var value = harrisThreshold.getValue();
+                if (value instanceof Integer) {
+                    harrisThresholdValue = ((Integer) value).doubleValue();
+                } else if (value instanceof Double) {
+                    harrisThresholdValue = (Double) value;
+                } else {
+                    harrisThresholdValue = 0;
+                }
+
+
+                startSpin();
+                executorService.submit(() -> {
+                    fImage = HarrisCornerDetection.HarrisCornersDetection(oImage, 0.04, harrisThresholdValue);
+                    OptionsService optionsService = new OptionsService();
+                    optionsService.showFiltredImage(fImage, filtredImage);
+                    stopSpin();
+                });
+
+            }
+        });
+        modelElectrostatic.addActionListener(new ActionListener() {
+            /**
+             * @param e the event to be processed
+             */
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                double thresholdElectrostaticalValue;
+                var value = thresholdElectrostatical.getValue();
+                if (value instanceof Integer) {
+                    thresholdElectrostaticalValue = ((Integer) value).doubleValue();
+                } else if (value instanceof Double) {
+                    thresholdElectrostaticalValue = (Double) value;
+                } else {
+                    thresholdElectrostaticalValue = 0;
+                }
+                startSpin();
+                executorService.submit(() -> {
+                    fImage = ElectrostaticModelCurnersDetection.ElectrostaticCornersDetection(oImage,  thresholdElectrostaticalValue);
                     OptionsService optionsService = new OptionsService();
                     optionsService.showFiltredImage(fImage, filtredImage);
                     stopSpin();
