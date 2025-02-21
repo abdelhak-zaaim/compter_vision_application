@@ -1,8 +1,6 @@
 package com.fsdm.cv;
 
-import com.fsdm.cv.cornerDetection.ElectrostaticModelCurnersDetection;
-import com.fsdm.cv.cornerDetection.HarrisCornerDetection;
-import com.fsdm.cv.cornerDetection.SusanCurnersDetections;
+
 import com.fsdm.cv.frequential.FPB;
 import com.fsdm.cv.frequential.FPBB;
 import com.fsdm.cv.frequential.FPH;
