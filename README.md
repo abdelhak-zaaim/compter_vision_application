@@ -25,4 +25,4 @@ mvn clean install
 mvn exec:java -Dexec.mainClass="com.fsdm.cv.home"
 ```
 2. The application will open a GUI where you can load an image and apply various image processing operations.
-3. 
+![Alt text](/images/image1.42.46.png "Home")
